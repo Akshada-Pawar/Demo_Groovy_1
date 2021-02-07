@@ -23,10 +23,10 @@ node{
              notifySuccessful()
         }
         // If there was an exception thrown, the build failed
-        catch(e){
+        catch(){
             currentBuild.result = "FAILED"
             notifyFailed()
-            throw e
+            //throw e
         }finally {
     // Success or failure, always send notifications
     notifyBuild(currentBuild.result)
