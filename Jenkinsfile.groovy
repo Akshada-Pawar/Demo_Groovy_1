@@ -5,8 +5,6 @@ node{
             deleteDir()
             checkout scm
         }
-        try{
-            notifyStarted()
         stage('build'){
                 echo "Building..."
                 docker.image('python:3.5.1').inside{
@@ -16,13 +14,6 @@ node{
                 }
                 
                 echo "Build Successful"
-             notifySuccessful()
-        }
-        catch(e){
-            currentBuild.result = "FAILED"
-            notifyFailed()
-            throw e
-        }
         }
         stage('test'){
             echo "Testing..."
