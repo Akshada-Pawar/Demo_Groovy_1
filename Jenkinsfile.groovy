@@ -41,9 +41,9 @@ node{
             }
                 dir(path: env.BUILD_ID){
                     unstash(name:'compiled-results')
-                    sh 'docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F library.py' '
+                    sh 'docker run --rm v ${VOLUME} ${IMAGE} 'pyinstaller -F library.py' '
                 }
                 archiveArtifacts "${env.BUILD_ID}/src/dist/library"
-                sh 'docker run --rm -v ${VOLUME} ${IMAGE} ''rm -rf build dist'
+                sh 'docker run --rm v ${VOLUME} ${IMAGE} ''rm -rf build dist'
         }
 }
