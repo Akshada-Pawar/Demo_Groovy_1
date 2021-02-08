@@ -34,10 +34,16 @@ node{
             echo "Test Successful"
         }
         stage('Deliver'){
+            agent any
+            environment {
+                VOLUME = '$(pwd)/sources:/src'
+                IMAGE = 'cdrx/pyinstaller-linux:python3'
+            }
                 dir(path: env.BUILD_ID){
                     unstash(name:'compiled-results')
+                    sh 'docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F library.py' '
                 }
                 archiveArtifacts "${env.BUILD_ID}/src/dist/library"
-                //sh 'docker run --rm -v ${VOLUME} ${IMAGE} ''rm -rf build dist'
+                sh 'docker run --rm -v ${VOLUME} ${IMAGE} ''rm -rf build dist'
         }
 }
