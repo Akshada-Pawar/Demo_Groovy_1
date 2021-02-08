@@ -43,7 +43,7 @@ node{
                     unstash(name:'compiled-results')
                     //sh 'docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F library.py' '
                 }
-                archiveArtifacts "/src/library"
+                archiveArtifacts "src/library.py"
                 //sh 'docker run --rm -v ${VOLUME} ${IMAGE} ''rm -rf build dist'
         }
 }
