@@ -1,11 +1,14 @@
-#!/usr/bin/env python
+#!/usr/bin/env groovy
 node{
     
         stage('Get Latest Code'){
             deleteDir()
             checkout scm
         }
-        stage('build'){
+        stage('User Input'){
+            input('Do you want to proceed?')
+        }
+        stage('Build'){
                 echo "Building..."
                 docker.image('python:3.5.1').inside{
                     sh 'python --version'
@@ -15,7 +18,7 @@ node{
                 
                 echo "Build Successful"
         }
-        stage('test'){
+        stage('Test'){
             echo "Testing..."
             def testError = null
             try{
@@ -27,6 +30,11 @@ node{
                 testError = err
                 currentBuild.result = 'FAILURE'
             }
+            
             echo "Test Successful"
+        }
+        stage('Deliver'){
+                archiveArtifacts "${env.BUILD_ID}/src/dist/library"
+                sh 'docker run --rm -v ${VOLUME} ${IMAGE} ''rm -rf build dist'
         }
 }
