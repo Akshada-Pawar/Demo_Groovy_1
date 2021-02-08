@@ -34,7 +34,10 @@ node{
             echo "Test Successful"
         }
         stage('Deliver'){
+                dir(path: env.BUILD_ID){
+                    unstash(name:'compiled-results')
+                }
                 archiveArtifacts "${env.BUILD_ID}/src/dist/library"
-                sh 'docker run --rm -v ${VOLUME} ${IMAGE} ''rm -rf build dist'
+                //sh 'docker run --rm -v ${VOLUME} ${IMAGE} ''rm -rf build dist'
         }
 }
