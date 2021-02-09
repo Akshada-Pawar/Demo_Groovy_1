@@ -26,6 +26,7 @@ pipeline{
         }
         stage('Test'){
             steps{
+            step{
             echo "Testing..."
             def testError = null
             script{
@@ -39,11 +40,13 @@ pipeline{
                 currentBuild.result = 'FAILURE'
             }
             }
+            }
             echo "Test Successful"
             }
         }
         stage('Deliver'){
             steps{
+            step{
             environment {
                 VOLUME = '$(pwd)/sources:/src'
                 IMAGE = 'cdrx/pyinstaller-linux:python3'
@@ -54,6 +57,7 @@ pipeline{
                 }
                 archiveArtifacts "src/library.py"
                 sh 'docker run --rm -v ${VOLUME} ${IMAGE} ''rm -rf build dist'
+            }
             }
         }
     }
