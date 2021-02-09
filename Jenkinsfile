@@ -16,11 +16,10 @@ pipeline{
         stage('Build'){
             steps{
                 echo "Building..."
-                docker.image('python:3.5.1').inside{
+                
                     sh 'python --version'
                     sh 'python -m py_compile src/library.py'
                 stash(name: 'compiled-results', includes: 'src/*.py*')
-                }
                 
                 echo "Build Successful"
             }
@@ -29,6 +28,7 @@ pipeline{
             steps{
             echo "Testing..."
             def testError = null
+            script{
             try{
                 docker.image('python:3.5.1').inside{
                 sh ' python src/library_test.py '
@@ -38,7 +38,7 @@ pipeline{
                 testError = err
                 currentBuild.result = 'FAILURE'
             }
-            
+            }
             echo "Test Successful"
             }
         }
