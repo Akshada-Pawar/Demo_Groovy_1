@@ -16,11 +16,13 @@ pipeline{
         stage('Build'){
             steps{
                 echo "Building..."
+                script{
                     docker.image('python:3.5.1').inside{
                     sh 'python --version'
                     sh 'python -m py_compile src/library.py'
                     stash(name: 'compiled-results', includes: 'src/*.py*')
                     }
+                }
                 echo "Build Successful"
             }
         }
