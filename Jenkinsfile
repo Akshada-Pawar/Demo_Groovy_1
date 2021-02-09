@@ -26,10 +26,10 @@ pipeline{
         }
         stage('Test'){
             steps{
-            step{
+            
             echo "Testing..."
-            def testError = null
             script{
+            def testError = null
             try{
                 docker.image('python:3.5.1').inside{
                 sh ' python src/library_test.py '
@@ -40,25 +40,31 @@ pipeline{
                 currentBuild.result = 'FAILURE'
             }
             }
-            }
+            
             echo "Test Successful"
             }
         }
         stage('Deliver'){
-            steps{
-            step{
+            agent any
+            
             environment {
                 VOLUME = '$(pwd)/sources:/src'
                 IMAGE = 'cdrx/pyinstaller-linux:python3'
             }
+            steps{
                 dir(path: env.BUILD_ID){
                     unstash(name:'compiled-results')
                     sh 'docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F library.py' '
                 }
+            }
+            post{
+                success{
                 archiveArtifacts "src/library.py"
                 sh 'docker run --rm -v ${VOLUME} ${IMAGE} ''rm -rf build dist'
             }
             }
+        }
+            
         }
     }
 }
