@@ -56,13 +56,11 @@ pipeline{
             steps{
                 dir(path: env.BUILD_ID){
                     unstash(name:'compiled-results')
-                   // sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F library.py' "
                 }
             }
             post{
                 success{
                 archiveArtifacts "src/library.py"
-                sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist' "
             }
             }
         }
